@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+</head>
+<body>
+    <canvas width="400" height="400" id="cnv"></canvas>
+    <script>
+        window.onload = (e) => {
+            canv = document.getElementById('cnv');
+            ctx= canv.getContext('2d');
+            document.addEventListener('keydown', keyProps);
+            setInterval(game, 1000/15);
+        }
+        px=py=10; // позиція кожного блоку змії вона буде === 10 так як ми будемо множити на 20
+        su=mu=20; // start use and mult use  
+        rx=ry=0; // рондомне значення для яблука 
+        xv=yv=0; // напрямок для сторін
+        snakeParts=[];
+        tail=5;
+        function keyProps(e){
+            switch(e.code){
+                case "ArrowUp":
+                    xv=0;yv=-1;
+                    break;
+                case "ArrowDown":
+                    xv=0;yv=1;
+                    break;   
+                case "ArrowLeft":
+                    xv=-1;yv=0;
+                    break; 
+                case "ArrowRight":
+                    xv=1;yv=0;
+                    break;    
+            }
+        }
+        function game(){
+            px+=xv;
+            py+=yv;
+
+            if(px<0){
+                px=su-1
+            }
+            if(px>su-1){
+                px=0;
+            }
+            if(py<0){
+               py=su-1
+            }
+            if(py>su-1){
+                py=0
+            }
+
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0,0, canv.width, canv.height);
+
+            ctx.fillStyle = 'lime';
+            for(let i=0; i<snakeParts.length; i++){
+                ctx.fillRect(snakeParts[i].x*mu, snakeParts[i].y*mu, mu-2,mu-2);
+
+                if(snakeParts[i].x === px && snakeParts[i].y === py){
+                    tail=5;
+                }
+            }
+            snakeParts.push({x: px, y: py})
+            while(snakeParts.length>tail){
+                snakeParts.shift();
+            }
+
+            if(px===rx && py===ry){
+                tail++;
+                rx = Math.floor(Math.random()*mu)
+                ry = Math.floor(Math.random()*mu) 
+            }
+
+            ctx.fillStyle = 'red';
+            ctx.fillRect(rx*mu,ry*mu, mu, mu);
+        }
+    </script>
+</body>
+</html>
